@@ -1,15 +1,16 @@
 package com.gb.stopwatch
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.gb.stopwatch.databinding.ActivityMainBinding
+import com.gb.stopwatch.domain.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 
 class MainActivity : AppCompatActivity() {
+
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
 
     private val timestampProvider = object : TimestampProvider {
         override fun getMilliseconds(): Long {
@@ -33,32 +34,32 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val textView = findViewById<TextView>(R.id.text_time)
         CoroutineScope(
-            Dispatchers.Main
-                    + SupervisorJob()
+            Dispatchers.Main + SupervisorJob()
         ).launch {
             stopwatchListOrchestrator.ticker.collect {
                 textView.text = it
             }
         }
 
-        findViewById<Button>(R.id.button_start).setOnClickListener {
+        binding.buttonStart.setOnClickListener {
             stopwatchListOrchestrator.start()
         }
-        findViewById<Button>(R.id.button_pause).setOnClickListener {
+        binding.buttonPause.setOnClickListener {
             stopwatchListOrchestrator.pause()
         }
-        findViewById<Button>(R.id.button_stop).setOnClickListener {
+        binding.buttonStop.setOnClickListener {
             stopwatchListOrchestrator.stop()
         }
 
     }
 }
 
-sealed class StopwatchState {
+/*sealed class StopwatchState {
 
     data class Paused(
         val elapsedTime: Long
@@ -68,13 +69,13 @@ sealed class StopwatchState {
         val startTime: Long,
         val elapsedTime: Long
     ) : StopwatchState()
-}
+}*/
 
-interface TimestampProvider {
+/*interface TimestampProvider {
     fun getMilliseconds(): Long
-}
+}*/
 
-class StopwatchStateCalculator(
+/*class StopwatchStateCalculator(
     private val timestampProvider: TimestampProvider,
     private val elapsedTimeCalculator: ElapsedTimeCalculator,
 ) {
@@ -98,9 +99,9 @@ class StopwatchStateCalculator(
             }
             is StopwatchState.Paused -> oldState
         }
-}
+}*/
 
-class ElapsedTimeCalculator(
+/*class ElapsedTimeCalculator(
     private val timestampProvider: TimestampProvider,
 ) {
 
@@ -113,9 +114,9 @@ class ElapsedTimeCalculator(
         }
         return timePassedSinceStart + state.elapsedTime
     }
-}
+}*/
 
-class TimestampMillisecondsFormatter {
+/*class TimestampMillisecondsFormatter {
 
     fun format(timestamp: Long): String {
         val millisecondsFormatted = (timestamp % 1000).pad(3)
@@ -137,9 +138,9 @@ class TimestampMillisecondsFormatter {
     companion object {
         const val DEFAULT_TIME = "00:00:000"
     }
-}
+}*/
 
-class StopwatchStateHolder(
+/*class StopwatchStateHolder(
     private val stopwatchStateCalculator: StopwatchStateCalculator,
     private val elapsedTimeCalculator: ElapsedTimeCalculator,
     private val timestampMillisecondsFormatter: TimestampMillisecondsFormatter
@@ -167,9 +168,9 @@ class StopwatchStateHolder(
         }
         return timestampMillisecondsFormatter.format(elapsedTime)
     }
-}
+}*/
 
-class StopwatchListOrchestrator(
+/*class StopwatchListOrchestrator(
     private val stopwatchStateHolder: StopwatchStateHolder,
     private val scope: CoroutineScope,
 ) {
@@ -211,5 +212,5 @@ class StopwatchListOrchestrator(
     private fun clearValue() {
         mutableTicker.value = "00:00:000"
     }
-}
+}*/
 
